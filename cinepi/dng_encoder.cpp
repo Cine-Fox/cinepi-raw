@@ -351,7 +351,7 @@ void DngEncoder::setup_encoder(libcamera::StreamConfiguration const &cfg, libcam
     dng_info.cfa_repeat_pattern_dim[1] = 2;
     dng_info.black_level_repeat_dim[0] = 2;
     dng_info.black_level_repeat_dim[1] = 2;
-    dng_info.bayer_order = strdup(bayer_format.order);
+    memcpy(dng_info.bayer_order,bayer_format.order,4);
 
     // offsets
     // dng_info.offset_y_start = options_->rawCrop[0];

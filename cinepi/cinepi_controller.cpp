@@ -213,6 +213,34 @@ void CinePIController::mainThread(){
     using MessageHandler = std::function<void(const std::optional<std::string>&)>;
 
     std::unordered_map<std::string, MessageHandler> handlers = {
+        { "lv_zoom", [this](const std::optional<std::string>& r) {
+            if(r) {
+                double zoomFactor = stod(*r);
+                // Retrieve the maximum sensor area
+                libcamera::Rectangle sensor_area = app_->GetCameras()[0]->controls().at(&controls::ScalerCrop).max().get<libcamera::Rectangle>();
+
+                // Calculate the dimensions of the zoomed-in area based on the zoom factor
+                int w = static_cast<int>(sensor_area.width / zoomFactor);
+                int h = static_cast<int>(sensor_area.height / zoomFactor);
+
+                // Calculate the top-left corner of the new crop area to keep it centered
+                int x = (sensor_area.width - w) / 2;
+                int y = (sensor_area.height - h) / 2;
+
+                // Define the crop rectangle
+                libcamera::Rectangle crop(x, y, w, h);
+
+                // Translate the crop rectangle by the sensor area's top-left point to align with the global coordinate system, if necessary
+                // This step might be redundant if the sensor_area's top-left is already considered (0,0) in your coordinate system.
+                // crop.translateBy(sensor_area.topLeft());
+
+                // Log and apply the crop
+                LOG(2, "Using crop " << crop.toString());
+                libcamera::ControlList cl;
+                cl.set(controls::ScalerCrop, crop);
+                app_->SetControls(cl);
+            }
+        }},
         { CONTROL_KEY_RAW_CROP, [this](const std::optional<std::string>& r) {
             std::unordered_map<std::string, std::string> m;
             redis_->hgetall("rawCrop", std::inserter(m, m.begin()));

@@ -22,7 +22,7 @@ static void event_loop(CinePIRecorder &app, CinePIController &controller, CinePI
 	controller.start();
 	controller.sync();
 
-	sound.start();
+//	sound.start();
 
 	static auto console = spdlog::stdout_color_mt("event_loop"); 
 
@@ -83,14 +83,14 @@ static void event_loop(CinePIRecorder &app, CinePIController &controller, CinePI
 		if(trigger > 0){
 			controller.folderOpen = create_clip_folder(app.GetOptions(), controller.getClipNumber());
 			app.GetEncoder()->resetFrameCount();
-			sound.record_start();
+//			sound.record_start();
 		} else if (trigger < 0){
 			controller.folderOpen = false;
-			sound.record_stop();
+//			sound.record_stop();
 		}
 
 		// send frame to dng encoder and save to disk
-		if(controller.isRecording() && sound.isRecording() && controller.folderOpen){
+		if(controller.isRecording() && controller.folderOpen){
 			// check to make sure our buffer is not full, stop recording if so. 
 			if(app.GetEncoder()->buffer_full()){
 				controller.setRecording(false);

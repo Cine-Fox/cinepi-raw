@@ -80,7 +80,7 @@ private:
 
 		short cfa_repeat_pattern_dim[2];
 		uint16_t black_level_repeat_dim[2];
-		char const *bayer_order;
+		char bayer_order[4];
 
 		float CAM_XYZ[9];
 
