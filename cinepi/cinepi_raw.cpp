@@ -58,7 +58,7 @@ static void event_loop(CinePIRecorder &app, CinePIController &controller, CinePI
 
 		CinePIRecorder::Msg msg = app.Wait();
 
-		controller.setShutterAngle(180.0);
+//		controller.setShutterAngle(180.0);
 
 		if (msg.type == RPiCamApp::MsgType::Quit)
 			return;
